@@ -4,7 +4,8 @@
   "description": "SCSS/ES6 Compiler for Shopify. Comes with theme watch!",
   "main": "Gulpfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "gulp theme-watch watch"
   },
   "repository": {
     "type": "git",

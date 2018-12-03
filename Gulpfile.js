@@ -1,5 +1,4 @@
 'use strict';
-
 const gulp = require('gulp');
 const babel = require('gulp-babel');
 const autoprefixer = require('gulp-autoprefixer');
@@ -23,7 +22,7 @@ const sassOptions = {
   outputStyle: 'compressed'
 };
 const babelOptions = {
-  presets: ['es6']
+  presets: ['es2015']
 };
 
 // Theme Watch
@@ -51,7 +50,7 @@ gulp.task('css', () => {
 });
 
 // JavaScript
-const jsFiles = 'js/*.js';
+const jsFiles = 'js/**/*.js';
 const jsDest = '../assets/';
 gulp.task('js', () => {
   return gulp.src(jsFiles)
@@ -65,7 +64,6 @@ gulp.task('js', () => {
 
 // Watch
 gulp.task('watch', () => {
-  gulp.watch(['theme-watch']);
   gulp.watch('sass/**/*.scss', ['css']);
   gulp.watch('js/**/*.js', ['js']);
 });
