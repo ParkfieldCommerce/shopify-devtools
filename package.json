@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/ParkfieldCommerce/shopify-devtools#readme",
   "devDependencies": {
+    "@babel/core": "^7.1.6",
+    "@babel/preset-env": "^7.1.6",
     "gulp": "^4.0.0",
     "gulp-autoprefixer": "^6.0.0",
     "gulp-babel": "^8.0.0",
