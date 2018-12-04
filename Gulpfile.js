@@ -24,6 +24,8 @@ const sassOptions = {
 const babelOptions = {
   presets: ['es2015']
 };
+const jsFiles = 'js/**/*.js';
+const jsDest = '../assets/';
 
 // Theme Watch
 gulp.task('theme-watch', () => {
@@ -50,8 +52,6 @@ gulp.task('css', () => {
 });
 
 // JavaScript
-const jsFiles = 'js/**/*.js';
-const jsDest = '../assets/';
 gulp.task('js', () => {
   return gulp.src(jsFiles)
     .pipe(babel(babelOptions))
