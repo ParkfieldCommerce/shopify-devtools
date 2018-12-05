@@ -63,14 +63,14 @@ gulp.task('js', () => {
 gulp.task('vendorCss', () => {
   return gulp.src('vendor/css/*.css')
     .pipe(plumber())
-    .concat('vendors.css')
+    .pipe(concat('vendors.css'))
     .pipe(gulp.dest('../assets/'))
 });
 
 gulp.task('vendorJs', () => {
   return gulp.src('vendor/js/*.js')
     .pipe(plumber())
-    .concat('vendors.js')
+    .pipe(concat('vendors.js'))
     .pipe(gulp.dest('../assets/'))
 });
 
