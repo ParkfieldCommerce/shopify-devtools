@@ -47,7 +47,7 @@ gulp.task('css', () => {
     .pipe(sass())
     .pipe(sass(sassOptions).on('error', sass.logError))
     .pipe(autoprefixer(autoprefixerOptions))
-    .pipe(rename('test.scss.liquid'))
+    .pipe(rename('dev-custom.scss.liquid'))
     .pipe(gulp.dest('../assets/'));
 });
 
@@ -55,9 +55,9 @@ gulp.task('css', () => {
 gulp.task('js', () => {
   return gulp.src(jsFiles)
     .pipe(babel(babelOptions))
-    .pipe(concat('test.js'))
+    .pipe(concat('dev-custom.js'))
     .pipe(gulp.dest(jsDest))
-    .pipe(rename('test.min.js'))
+    .pipe(rename('dev-custom.min.js'))
     .pipe(uglify())
     .pipe(gulp.dest(jsDest));
 });
