@@ -22,7 +22,7 @@ const sassOptions = {
   outputStyle: 'compressed'
 };
 const babelOptions = {
-  presets: ['es2015']
+  presets: ['@babel/preset-env']
 };
 
 // Theme Watch
