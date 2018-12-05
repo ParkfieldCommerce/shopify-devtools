@@ -24,8 +24,6 @@ const sassOptions = {
 const babelOptions = {
   presets: ['es2015']
 };
-const jsFiles = 'js/app.js';
-const jsDest = '../assets/';
 
 // Theme Watch
 gulp.task('theme-watch', () => {
@@ -53,17 +51,33 @@ gulp.task('scss', () => {
 
 // JavaScript
 gulp.task('js', () => {
-  return gulp.src(jsFiles)
+  return gulp.src('js/app.js')
     .pipe(plumber())
     .pipe(babel(babelOptions))
     .pipe(concat('dev-custom.js'))
     .pipe(rename('dev-custom.min.js'))
     .pipe(uglify())
-    .pipe(gulp.dest(jsDest));
+    .pipe(gulp.dest('../assets/'));
+});
+
+gulp.task('vendorCss', () => {
+  return gulp.src('vendor/css/*.css')
+    .pipe(plumber())
+    .concat('vendors.css')
+    .pipe(gulp.dest('../assets/'))
+});
+
+gulp.task('vendorJs', () => {
+  return gulp.src('vendor/js/*.js')
+    .pipe(plumber())
+    .concat('vendors.js')
+    .pipe(gulp.dest('../assets/'))
 });
 
 // Watch
 gulp.task('watch', () => {
   gulp.watch('sass/**/*.scss', gulp.series('scss'));
   gulp.watch('js/**/*.js', gulp.series('js'));
+  gulp.watch('vendor/css/*.css', gulp.series('vendorCss'));
+  gulp.watch('vendor/js/*.js', gulp.series('vendorJs'));
 });
