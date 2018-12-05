@@ -24,7 +24,7 @@ const sassOptions = {
 const babelOptions = {
   presets: ['es2015']
 };
-const jsFiles = 'js/**/*.js';
+const jsFiles = 'js/app.js';
 const jsDest = '../assets/';
 
 // Theme Watch
@@ -41,7 +41,7 @@ gulp.task('theme-watch', () => {
 });
 
 // Stylesheet
-gulp.task('css', () => {
+gulp.task('scss', () => {
   gulp.src('sass/**/*.scss.liquid')
     .pipe(plumber())
     .pipe(sass())
@@ -54,9 +54,9 @@ gulp.task('css', () => {
 // JavaScript
 gulp.task('js', () => {
   return gulp.src(jsFiles)
+    .pipe(plumber())
     .pipe(babel(babelOptions))
     .pipe(concat('dev-custom.js'))
-    .pipe(gulp.dest(jsDest))
     .pipe(rename('dev-custom.min.js'))
     .pipe(uglify())
     .pipe(gulp.dest(jsDest));
@@ -64,6 +64,6 @@ gulp.task('js', () => {
 
 // Watch
 gulp.task('watch', () => {
-  gulp.watch('sass/**/*.scss', gulp.series('css'));
+  gulp.watch('sass/**/*.scss', gulp.series('scss'));
   gulp.watch('js/**/*.js', gulp.series('js'));
 });
