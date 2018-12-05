@@ -40,7 +40,7 @@ gulp.task('theme-watch', () => {
 
 // Stylesheet
 gulp.task('scss', () => {
-  gulp.src('sass/**/*.scss.liquid')
+  return gulp.src('sass/**/*.scss.liquid')
     .pipe(plumber())
     .pipe(sass())
     .pipe(sass(sassOptions).on('error', sass.logError))
