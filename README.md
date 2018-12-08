@@ -11,6 +11,7 @@ This is using [Gulp](http://gulpjs.com/) to run `theme watch` and compile SCSS a
 * Any SCSS you write will be compressed and autoprefixed!
 * You can write ES6 JavaScript that will be passed through [Babel](https://babeljs.io/) and be minified!
 * `theme watch` will run from this folder!
+* Vendor folder for css and js!
 
 #### Installation
 * Clone this repo in your theme root
@@ -30,6 +31,5 @@ Contributions are welcome!
 
 ### To-Do
 
-* Make sure that Gulp is watching and compiling JS files correctly.
 * Fill out some of the empty SCSS files
-* Have vendor file support available
+* Allow `theme download`
