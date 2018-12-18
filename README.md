@@ -9,9 +9,9 @@ This is using [Gulp](http://gulpjs.com/) to run `theme watch` and compile SCSS a
 
 #### Features
 * Any SCSS you write will be compressed and autoprefixed!
-* You can write ES6 JavaScript that will be passed through [Babel](https://babeljs.io/) and be minified!
+* You can write ES6 JavaScript that goes through [Babel](https://babeljs.io/) and compresses!
 * `theme watch` will run from this folder!
-* Vendor folder for css and js!
+* Vendor folder for CSS and JS!
 
 #### Installation
 * Clone this repo in your theme root
@@ -25,6 +25,14 @@ Any changes that you make in the `[THEME_ROOT]/shopify-devtool/sass/` will creat
 
 Any changes made in `[THEME_ROOT]/shopify-devtool/js/` will create a `dev-custom.js` inside `[THEME_ROOT]/assets/`. You may write in ES6 javascript as this Gulpfile uses [Babel](https://babeljs.io/)
 
+Be sure to include these files in your `theme.liquid` file. Or just copy and paste this below:
+```html
+{{ 'vendors.css' | asset_url | stylesheet_tag }}
+{{ 'vendors.js' | asset_url | stylesheet_tag }}
+{{ 'dev-custom.scss.css' | asset_url | stylesheet_tag }}
+{{ 'dev-custom.min.js' | asset_url | script_tag }}
+```
+
 We will be updating this toolkit constantly based on the resources we commonly use with our clients. Please note that this is by no means completely finished and you may encounter some bugs.
 
 Contributions are welcome!
@@ -33,3 +41,5 @@ Contributions are welcome!
 
 * Fill out some of the empty SCSS files
 * Allow `theme download`
+* Allow svgs to be placed in a sprite sheet
+* Allow liquid syntax in JS files for specific JS loading
