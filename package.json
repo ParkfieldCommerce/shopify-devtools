@@ -1,6 +1,6 @@
 {
   "name": "shopify-devtool",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "SCSS/ES6 Compiler for Shopify. Comes with theme watch!",
   "main": "Gulpfile.js",
   "scripts": {
