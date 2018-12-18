@@ -9,6 +9,7 @@ const rename = require("gulp-rename");
 const sass = require('gulp-sass');
 const uglify = require('gulp-uglify');
 const plumber = require('gulp-plumber');
+const chalk = require('chalk');
 const spawn = require('child_process').spawn,
       listen = spawn('theme', ['watch'], {
         cwd: '..'
@@ -24,17 +25,27 @@ const sassOptions = {
 const babelOptions = {
   presets: ['@babel/preset-env']
 };
+const cyanBold = chalk.cyan.bold;
+const white = chalk.white;
+const warning = chalk.red;
 
 // Theme Watch
 gulp.task('theme-watch', () => {
   listen.stdout.on('data', function (data) {
-    console.log('stdout: ' + data.toString());
+    let info = data.toString();
+    let time = info.split('[development]')[0];
+    let message = info.split('[development]')[1];
+    if (info.indexOf('Warning') > -1) {
+      console.log(warning(message));
+    } else {
+      console.log(cyanBold(time) + white(message));
+    }
   });
   listen.stderr.on('data', function (data) {
-    console.log('stderr: ' + data.toString());
+    console.log(warning(data.toString()));
   });
   listen.on('exit', function (code) {
-    console.log('child process exited with code ' + code.toString());
+    console.log(warning('child process exited with code ') + warning(code.toString()));
   });
 });
 
@@ -60,13 +71,13 @@ gulp.task('js', () => {
     .pipe(gulp.dest('../assets/'));
 });
 
+// Vendors
 gulp.task('vendorCss', () => {
   return gulp.src('vendor/css/*.css')
     .pipe(plumber())
     .pipe(concat('vendors.css'))
     .pipe(gulp.dest('../assets/'))
 });
-
 gulp.task('vendorJs', () => {
   return gulp.src('vendor/js/*.js')
     .pipe(plumber())
