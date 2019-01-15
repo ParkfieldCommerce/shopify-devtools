@@ -1,11 +1,11 @@
 {
   "name": "shopify-devtool",
-  "version": "1.0.1",
+  "version": "1.0.5",
   "description": "SCSS/ES6 Compiler for Shopify. Comes with theme watch!",
   "main": "Gulpfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "gulp theme-watch watch"
+    "watch": "gulp"
   },
   "repository": {
     "type": "git",

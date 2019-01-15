@@ -30,7 +30,7 @@ const white = chalk.white;
 const warning = chalk.red;
 
 // Theme Watch
-gulp.task('theme-watch', () => {
+async function themeWatch() {
   listen.stdout.on('data', function (data) {
     let info = data.toString();
     let time = info.split('[development]')[0];
@@ -47,21 +47,21 @@ gulp.task('theme-watch', () => {
   listen.on('exit', function (code) {
     console.log(warning('child process exited with code ') + warning(code.toString()));
   });
-});
+}
 
 // Stylesheet
-gulp.task('scss', () => {
-  return gulp.src('sass/**/*.scss.liquid')
+async function scss() {
+  return gulp.src('sass/**/app.scss.liquid')
     .pipe(plumber())
     .pipe(sass())
     .pipe(sass(sassOptions).on('error', sass.logError))
     .pipe(autoprefixer(autoprefixerOptions))
-    .pipe(rename('dev-custom.scss.liquid'))
+    .pipe(rename('dev-custom.css'))
     .pipe(gulp.dest('../assets/'));
-});
+}
 
 // JavaScript
-gulp.task('js', () => {
+async function js() {
   return gulp.src('js/app.js')
     .pipe(plumber())
     .pipe(babel(babelOptions))
@@ -69,26 +69,29 @@ gulp.task('js', () => {
     .pipe(rename('dev-custom.min.js'))
     .pipe(uglify())
     .pipe(gulp.dest('../assets/'));
-});
+}
 
 // Vendors
-gulp.task('vendorCss', () => {
+async function vendorCss() {
   return gulp.src('vendor/css/*.css')
     .pipe(plumber())
     .pipe(concat('vendors.css'))
     .pipe(gulp.dest('../assets/'))
-});
-gulp.task('vendorJs', () => {
+}
+async function vendorJs() {
   return gulp.src('vendor/js/*.js')
     .pipe(plumber())
     .pipe(concat('vendors.js'))
     .pipe(gulp.dest('../assets/'))
-});
+}
 
 // Watch
-gulp.task('watch', () => {
-  gulp.watch('sass/**/*.scss', gulp.series('scss'));
-  gulp.watch('js/**/*.js', gulp.series('js'));
-  gulp.watch('vendor/css/*.css', gulp.series('vendorCss'));
-  gulp.watch('vendor/js/*.js', gulp.series('vendorJs'));
-});
+async function watch() {
+  gulp.watch('sass/**/*.scss', gulp.series(scss));
+  gulp.watch('js/**/*.js', gulp.series(js));
+  gulp.watch('vendor/css/*.css', gulp.series(vendorCss));
+  gulp.watch('vendor/js/*.js', gulp.series(vendorJs));
+}
+
+const build = gulp.parallel(themeWatch, scss, js, vendorCss, vendorJs, watch);
+exports.default = build;
