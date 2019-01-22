@@ -10,26 +10,27 @@ This is using [Gulp](http://gulpjs.com/) to run `theme watch` and compile SCSS a
 #### Features
 * Any SCSS you write will be compressed and autoprefixed!
 * You can write ES6 JavaScript that goes through [Babel](https://babeljs.io/) and compresses!
-* `theme watch` will run from this folder!
+* `theme watch` and `theme download` will run from this folder!
 * Vendor folder for CSS and JS!
 
 #### Installation
 * Clone this repo in your theme root
 * `cd shopify-devtool`
 * `npm install`
-* `npm run watch`
+* `npm run watch` will trigger `theme watch`
+* `npm run update` will trigger `theme download`
 
 This Gulpfile will look at the theme root and execute `theme watch`
 
-Any changes that you make in the `[THEME_ROOT]/shopify-devtool/sass/` will create a `dev-custom.scss.liquid` file inside `[THEME_ROOT]/assets/` that will be autoprefixed and compressed.
+Any changes that you make in the `[THEME_ROOT]/shopify-devtools/sass/` will create a `dev-custom.scss.liquid` file inside `[THEME_ROOT]/assets/` that will be autoprefixed and compressed.
 
-Any changes made in `[THEME_ROOT]/shopify-devtool/js/` will create a `dev-custom.js` inside `[THEME_ROOT]/assets/`. You may write in ES6 javascript as this Gulpfile uses [Babel](https://babeljs.io/)
+Any changes made in `[THEME_ROOT]/shopify-devtools/js/` will create a `dev-custom.js` inside `[THEME_ROOT]/assets/`. You may write in ES6 javascript as this Gulpfile uses [Babel](https://babeljs.io/)
 
 Be sure to include these files in your `theme.liquid` file. Or just copy and paste this below:
 ```html
 {{ 'vendors.css' | asset_url | stylesheet_tag }}
 {{ 'vendors.js' | asset_url | stylesheet_tag }}
-{{ 'dev-custom.scss.css' | asset_url | stylesheet_tag }}
+{{ 'dev-custom.css' | asset_url | stylesheet_tag }}
 {{ 'dev-custom.min.js' | asset_url | script_tag }}
 ```
 
@@ -40,6 +41,5 @@ Contributions are welcome!
 ### To-Do
 
 * Fill out some of the empty SCSS files
-* Allow `theme download`
 * Allow svgs to be placed in a sprite sheet
 * Allow liquid syntax in JS files for specific JS loading
