@@ -33,6 +33,9 @@
     "gulp-uglify": "^3.0.1"
   },
   "dependencies": {
-    "chalk": "^2.4.1"
+    "chalk": "^2.4.1",
+    "gulp-touch": "^1.0.1",
+    "node-sass": "^4.11.0",
+    "through2": "^3.0.0"
   }
 }

@@ -12,8 +12,9 @@ const plumber = require('gulp-plumber');
 const chalk = require('chalk');
 const { spawn } = require('child_process');
 const autoprefixerOptions = {
-  browsers : ['last 3 versions', '> 5%', 'Explorer >= 10', 'Safari >= 8'],
-  cascade : false
+  browsers: ['last 3 versions', '> 5%', 'Explorer >= 10', 'Safari >= 8'],
+  cascade: true,
+  grid: "autoplace"
 };
 const sassOptions = {
   errLogToConsole: true,
@@ -25,6 +26,8 @@ const babelOptions = {
 const cyanBold = chalk.cyan.bold;
 const white = chalk.white;
 const warning = chalk.red;
+const t2 = require('through2');
+sass.compiler = require('node-sass');
 
 // Theme Watch
 async function themeWatch() {
@@ -55,12 +58,18 @@ async function themeDownload() {
 
 // Stylesheet
 async function scss() {
-  return gulp.src('sass/**/app.scss.liquid')
+  return gulp.src('sass/**/*.scss.liquid')
     .pipe(plumber())
     .pipe(sass())
     .pipe(sass(sassOptions).on('error', sass.logError))
     .pipe(autoprefixer(autoprefixerOptions))
     .pipe(rename('dev-custom.css'))
+    .pipe(t2.obj((chunk, enc, cb) => {
+      let date = new Date();
+      chunk.stat.atime = date;
+      chunk.stat.mtime = date;
+      cb(null, chunk);
+    }))
     .pipe(gulp.dest('../assets/'));
 }
 
@@ -90,14 +99,14 @@ async function vendorJs() {
 }
 
 // Watch
-async function watch() {
-  gulp.watch('sass/**/*.scss', gulp.series(scss));
-  gulp.watch('js/**/*.js', gulp.series(js));
-  gulp.watch('vendor/css/*.css', gulp.series(vendorCss));
-  gulp.watch('vendor/js/*.js', gulp.series(vendorJs));
+async function watch(cb) {
+  gulp.watch('sass/**/*.scss', gulp.series(scss))
+  gulp.watch('js/**/*.js', gulp.series(js))
+  gulp.watch('vendor/css/*.css', gulp.series(vendorCss))
+  gulp.watch('vendor/js/*.js', gulp.series(vendorJs))
 }
 
-const build = gulp.parallel(themeWatch, scss, js, vendorCss, vendorJs, watch);
+const build = gulp.series([themeWatch, scss, js, vendorCss, vendorJs, watch]);
 const td = gulp.series(themeDownload);
 exports.default = build;
 exports.themeDownload = td;
