@@ -10,10 +10,7 @@ const sass = require('gulp-sass');
 const uglify = require('gulp-uglify');
 const plumber = require('gulp-plumber');
 const chalk = require('chalk');
-const spawn = require('child_process').spawn,
-      listen = spawn('theme', ['watch'], {
-        cwd: '..'
-      });
+const { spawn } = require('child_process');
 const autoprefixerOptions = {
   browsers : ['last 3 versions', '> 5%', 'Explorer >= 10', 'Safari >= 8'],
   cascade : false
@@ -31,6 +28,7 @@ const warning = chalk.red;
 
 // Theme Watch
 async function themeWatch() {
+  const listen = spawn('theme', ['watch'], { cwd: '..' });
   listen.stdout.on('data', function (data) {
     let info = data.toString();
     let time = info.split('[development]')[0];
@@ -47,6 +45,12 @@ async function themeWatch() {
   listen.on('exit', function (code) {
     console.log(warning('child process exited with code ') + warning(code.toString()));
   });
+}
+
+// Theme Download
+async function themeDownload() {
+  const update = spawn('theme', ['download'], { cwd: '..', stdio: 'inherit' });
+  return update;
 }
 
 // Stylesheet
@@ -94,4 +98,6 @@ async function watch() {
 }
 
 const build = gulp.parallel(themeWatch, scss, js, vendorCss, vendorJs, watch);
+const td = gulp.series(themeDownload);
 exports.default = build;
+exports.themeDownload = td;
