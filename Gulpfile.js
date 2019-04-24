@@ -9,6 +9,7 @@ const rename = require("gulp-rename");
 const sass = require('gulp-sass');
 const uglify = require('gulp-uglify');
 const plumber = require('gulp-plumber');
+const include = require('gulp-include');
 const chalk = require('chalk');
 const { spawn } = require('child_process');
 const autoprefixerOptions = {
@@ -28,6 +29,14 @@ const white = chalk.white;
 const warning = chalk.red;
 const t2 = require('through2');
 sass.compiler = require('node-sass');
+function runT2() {
+  return t2.obj((chunk, enc, cb) => {
+    let date = new Date();
+    chunk.stat.atime = date;
+    chunk.stat.mtime = date;
+    cb(null, chunk);
+  })
+}
 
 // Theme Watch
 async function themeWatch() {
@@ -64,12 +73,7 @@ async function scss() {
     .pipe(sass(sassOptions).on('error', sass.logError))
     .pipe(autoprefixer(autoprefixerOptions))
     .pipe(rename('dev-custom.css'))
-    .pipe(t2.obj((chunk, enc, cb) => {
-      let date = new Date();
-      chunk.stat.atime = date;
-      chunk.stat.mtime = date;
-      cb(null, chunk);
-    }))
+    .pipe(runT2())
     .pipe(gulp.dest('../assets/'));
 }
 
@@ -77,10 +81,13 @@ async function scss() {
 async function js() {
   return gulp.src('js/app.js')
     .pipe(plumber())
+    .pipe(include())
+      .on('error', console.log)
     .pipe(babel(babelOptions))
     .pipe(concat('dev-custom.js'))
     .pipe(rename('dev-custom.min.js'))
     .pipe(uglify())
+    .pipe(runT2())
     .pipe(gulp.dest('../assets/'));
 }
 
@@ -92,9 +99,12 @@ async function vendorCss() {
     .pipe(gulp.dest('../assets/'))
 }
 async function vendorJs() {
-  return gulp.src('vendor/js/*.js')
+  return gulp.src('vendor/js/vendor.js')
     .pipe(plumber())
+    .pipe(include())
+      .on('error', console.log)
     .pipe(concat('vendors.js'))
+    .pipe(runT2())
     .pipe(gulp.dest('../assets/'))
 }
 
@@ -103,7 +113,7 @@ async function watch(cb) {
   gulp.watch('sass/**/*.scss', gulp.series(scss))
   gulp.watch('js/**/*.js', gulp.series(js))
   gulp.watch('vendor/css/*.css', gulp.series(vendorCss))
-  gulp.watch('vendor/js/*.js', gulp.series(vendorJs))
+  gulp.watch('vendor/js/**/*.js', gulp.series(vendorJs))
 }
 
 const build = gulp.series([themeWatch, scss, js, vendorCss, vendorJs, watch]);
