@@ -29,7 +29,7 @@ Any changes made in `[THEME_ROOT]/shopify-devtools/js/` will create a `dev-custo
 Be sure to include these files in your `theme.liquid` file. Or just copy and paste this below:
 ```html
 {{ 'vendors.css' | asset_url | stylesheet_tag }}
-{{ 'vendors.js' | asset_url | stylesheet_tag }}
+{{ 'vendors.js' | asset_url | script_tag }}
 {{ 'dev-custom.css' | asset_url | stylesheet_tag }}
 {{ 'dev-custom.min.js' | asset_url | script_tag }}
 ```
