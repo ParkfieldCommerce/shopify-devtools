@@ -7,6 +7,9 @@ This readme assumes you build in Shopify's [Theme Kit](https://shopify.github.io
 
 This is using [Gulp](http://gulpjs.com/) to run `theme watch` and compile SCSS and ES6 JavaScript all from your `/shopify-devtool` directory.
 
+#### Changelog
+0.1.5 - Updated dependencies, added `.browserlistrc`, and cleaned up some code
+
 #### Features
 * Any SCSS you write will be compressed and autoprefixed!
 * You can write ES6 JavaScript that goes through [Babel](https://babeljs.io/) and compresses!

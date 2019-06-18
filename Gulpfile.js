@@ -1,19 +1,22 @@
 'use strict';
-const gulp = require('gulp');
-const babel = require('gulp-babel');
-const autoprefixer = require('gulp-autoprefixer');
-const changed = require('gulp-changed');
-const concat = require('gulp-concat');
-const csslint = require('gulp-csslint');
-const rename = require("gulp-rename");
-const sass = require('gulp-sass');
-const uglify = require('gulp-uglify');
-const plumber = require('gulp-plumber');
-const include = require('gulp-include');
-const chalk = require('chalk');
+
+// Variables
+const { src, dest, watch, series } = require('gulp');
 const { spawn } = require('child_process');
+const babel         = require('gulp-babel'),
+      autoprefixer  = require('gulp-autoprefixer'),
+      changed       = require('gulp-changed'),
+      concat        = require('gulp-concat'),
+      rename        = require("gulp-rename"),
+      sass          = require('gulp-sass'),
+      uglify        = require('gulp-uglify'),
+      plumber       = require('gulp-plumber'),
+      include       = require('gulp-include'),
+      chalk         = require('chalk'),
+      t2            = require('through2');
+
+// Options
 const autoprefixerOptions = {
-  browsers: ['last 3 versions', '> 5%', 'Explorer >= 10', 'Safari >= 8'],
   cascade: true,
   grid: "autoplace"
 };
@@ -21,14 +24,17 @@ const sassOptions = {
   errLogToConsole: true,
   outputStyle: 'compressed'
 };
+sass.compiler = require('node-sass');
 const babelOptions = {
   presets: ['@babel/preset-env']
 };
+
+// Colors
 const cyanBold = chalk.cyan.bold;
 const white = chalk.white;
 const warning = chalk.red;
-const t2 = require('through2');
-sass.compiler = require('node-sass');
+
+// Functions
 function runT2() {
   return t2.obj((chunk, enc, cb) => {
     let date = new Date();
@@ -41,7 +47,7 @@ function runT2() {
 // Theme Watch
 async function themeWatch() {
   const listen = spawn('theme', ['watch'], { cwd: '..' });
-  listen.stdout.on('data', function (data) {
+  listen.stdout.on('data', data => {
     let info = data.toString();
     let time = info.split('[development]')[0];
     let message = info.split('[development]')[1];
@@ -51,35 +57,34 @@ async function themeWatch() {
       console.log(cyanBold(time) + white(message));
     }
   });
-  listen.stderr.on('data', function (data) {
+  listen.stderr.on('data', data => {
     console.log(warning(data.toString()));
   });
-  listen.on('exit', function (code) {
+  listen.on('exit', code => {
     console.log(warning('child process exited with code ') + warning(code.toString()));
   });
 }
 
 // Theme Download
 async function themeDownload() {
-  const update = spawn('theme', ['download'], { cwd: '..', stdio: 'inherit' });
-  return update;
+  return spawn('theme', ['download'], { cwd: '..', stdio: 'inherit' });
 }
 
 // Stylesheet
 async function scss() {
-  return gulp.src('sass/**/*.scss.liquid')
+  return src('sass/**/*.scss.liquid')
     .pipe(plumber())
     .pipe(sass())
     .pipe(sass(sassOptions).on('error', sass.logError))
     .pipe(autoprefixer(autoprefixerOptions))
     .pipe(rename('dev-custom.css'))
     .pipe(runT2())
-    .pipe(gulp.dest('../assets/'));
+    .pipe(dest('../assets/'));
 }
 
 // JavaScript
 async function js() {
-  return gulp.src('js/app.js')
+  return src('js/app.js')
     .pipe(plumber())
     .pipe(include())
       .on('error', console.log)
@@ -88,35 +93,35 @@ async function js() {
     .pipe(rename('dev-custom.min.js'))
     .pipe(uglify())
     .pipe(runT2())
-    .pipe(gulp.dest('../assets/'));
+    .pipe(dest('../assets/'));
 }
 
 // Vendors
 async function vendorCss() {
-  return gulp.src('vendor/css/*.css')
+  return src('vendor/css/*.css')
     .pipe(plumber())
     .pipe(concat('vendors.css'))
-    .pipe(gulp.dest('../assets/'))
+    .pipe(dest('../assets/'))
 }
 async function vendorJs() {
-  return gulp.src('vendor/js/vendor.js')
+  return src('vendor/js/vendor.js')
     .pipe(plumber())
     .pipe(include())
       .on('error', console.log)
     .pipe(concat('vendors.js'))
     .pipe(runT2())
-    .pipe(gulp.dest('../assets/'))
+    .pipe(dest('../assets/'))
 }
 
 // Watch
-async function watch(cb) {
-  gulp.watch('sass/**/*.scss', gulp.series(scss))
-  gulp.watch('js/**/*.js', gulp.series(js))
-  gulp.watch('vendor/css/*.css', gulp.series(vendorCss))
-  gulp.watch('vendor/js/**/*.js', gulp.series(vendorJs))
+async function listen(cb) {
+  watch('sass/**/*.scss', series(scss));
+  watch('js/**/*.js', series(js));
+  watch('vendor/css/*.css', series(vendorCss));
+  watch('vendor/js/**/*.js', series(vendorJs));
 }
 
-const build = gulp.series([themeWatch, scss, js, vendorCss, vendorJs, watch]);
-const td = gulp.series(themeDownload);
+const build = series([themeWatch, scss, js, vendorCss, vendorJs, listen]);
+const td = series(themeDownload);
 exports.default = build;
 exports.themeDownload = td;
